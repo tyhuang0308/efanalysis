@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>EF 測驗批次分析</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="page"><div class="frame">
+<header class="nav">
+  <span class="logo"><svg viewBox="0 0 26 26" aria-hidden="true"><rect x="1" y="1" width="20" height="20" fill="none" stroke="#1d1d1b"/><rect x="5" y="5" width="20" height="20" fill="none" stroke="#1d1d1b"/><rect x="8" y="14" width="5" height="5" fill="#1d1d1b"/></svg>EF ANALYSIS</span>
+  <div class="navr">
+    <nav class="links"><a href="#files">Files</a><a href="#outputs">Outputs</a><a href="#results">Results</a></nav>
+    <div class="engine" id="engine" data-s="load" role="status" aria-live="polite"><span class="dot"></span><span id="engineText">正在載入分析引擎</span></div>
+    <div class="circles" aria-label="支援的測驗代碼"><span title="Flanker">F</span><span title="N-back">N</span><span title="DCCS">D</span><span title="WCST">W</span></div>
+  </div>
+</header>
+
+<section class="hero" aria-label="加入檔案">
+  <div class="htext">
+    <h1>把資料夾拖進來，<br>直接拿到 Excel。</h1>
+    <p class="lede">Flanker、N-back、DCCS、WCST 批次分析。程式會自動挑出「個案ID＋測驗縮寫.txt」的檔案，例如 NMY001F.txt，其他檔案會略過。</p>
+    <div class="btns">
+      <label class="rect">選擇資料夾<input type="file" id="pickDir" webkitdirectory multiple></label>
+      <label class="rect line">選擇檔案<input type="file" id="pickFiles" accept=".txt" multiple></label>
+    </div>
+    <svg class="mark" viewBox="0 0 30 38" aria-hidden="true"><path d="M15 1 29 19 15 37 1 19Z" fill="none" stroke="#1d1d1b"/><path d="M1 19h28L15 37Z" fill="#1d1d1b"/><path d="M8 10h14M5 14h20" stroke="#1d1d1b" stroke-width=".8"/></svg>
+  </div>
+  <div class="drop" id="tray">
+    <svg viewBox="0 0 120 92" aria-hidden="true" fill="none" stroke="#1d1d1b" stroke-width="1.1">
+      <rect x="10" y="14" width="78" height="58"/><rect x="18" y="8" width="78" height="58"/><rect x="26" y="2" width="78" height="58" fill="#fbf9f4"/>
+      <circle cx="65" cy="31" r="16"/><circle cx="65" cy="31" r="11"/>
+      <path d="M65 38V24m-5 5 5-5 5 5" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M2 88h116" stroke-dasharray="2 4"/>
+    </svg>
+    <b>把一個或多個資料夾拖到這裡</b>
+    <small>可以一次拖好幾個，也可以分好幾次拖</small>
+  </div>
+</section>
+
+<section class="spec" aria-label="批次規格">
+  <p class="lab">Batch spec</p>
+  <div><strong>20</strong><span>每批檔案上限</span></div>
+  <div><strong>0</strong><span>上傳到伺服器的資料</span></div>
+  <div><strong>~15s</strong><span>第一次載入時間</span></div>
+  <div><strong>.xlsx</strong><span>每個檔案一份</span></div>
+</section>
+
+<section class="split" id="outputs" aria-label="各測驗的輸出">
+  <div class="side"><p class="lab">What it scores</p></div>
+  <div class="main svc">
+    <div><svg viewBox="0 0 44 44" fill="none" stroke="#1d1d1b" stroke-width="1"><path d="M4 22l6-6m-6 6 6 6M14 22l6-6m-6 6 6 6M24 22l6-6m-6 6 6 6M34 22l6-6m-6 6 6 6"/><path d="M4 22h36"/></svg><span><h3>Flanker · F</h3><p>一致與不一致嘗試的正確率、反應時間，以及衝突效應 Cnf。</p></span></div>
+    <div><svg viewBox="0 0 44 44" fill="none" stroke="#1d1d1b" stroke-width="1"><rect x="4" y="16" width="20" height="20"/><rect x="11" y="10" width="20" height="20"/><rect x="18" y="4" width="20" height="20"/></svg><span><h3>N-back · N</h3><p>1-back、2-back（有做就含 3-back）的正確率與反應時間。</p></span></div>
+    <div><svg viewBox="0 0 44 44" fill="none" stroke="#1d1d1b" stroke-width="1"><circle cx="16" cy="22" r="12"/><circle cx="28" cy="22" r="12"/><circle cx="22" cy="22" r="5"/></svg><span><h3>DCCS · D</h3><p>單一規則與雙規則區段的正確率與反應時間。</p></span></div>
+    <div><svg viewBox="0 0 44 44" fill="none" stroke="#1d1d1b" stroke-width="1"><path d="M22 3c1.5 12 7 17.5 19 19-12 1.5-17.5 7-19 19-1.5-12-7-17.5-19-19 12-1.5 17.5-7 19-19Z"/></svg><span><h3>WCST · W</h3><p>持續性反應與錯誤、概念層次反應、完成類別數、learning to learn。</p></span></div>
+  </div>
+</section>
+
+<section class="split" id="files" aria-label="待分析檔案">
+  <div class="side">
+    <h2>待分析<br>檔案<span class="count" id="count">0 / 20</span></h2>
+    <p>一次最多 20 個檔案，可以分好幾次加入。格式不符或檔名重複的檔案會自動略過。資料只在這台電腦的瀏覽器裡處理。</p>
+    <div class="actions">
+      <button class="rect" id="run" disabled>完成，開始分析</button>
+      <button class="rect line" id="clear" disabled>清空清單</button>
+    </div>
+    <p class="msg" id="msg" aria-live="polite"></p>
+    <details class="skip" id="skipBox" hidden><summary id="skipSum"></summary><ul id="skipList"></ul></details>
+  </div>
+  <div class="main"><ul class="queue" id="queue"></ul></div>
+</section>
+
+<section class="split" id="results" hidden aria-label="分析結果">
+  <div class="side">
+    <h2>分析<br>結果</h2>
+    <p id="sum"></p>
+    <button class="rect" id="zipBtn" hidden>下載全部 Excel（zip）</button>
+  </div>
+  <div class="main"><div class="cards" id="cards"></div></div>
+</section>
+
+<footer><span>計分程式與 Colab 版 FlankerNbackDCCSWCST_analysis 相同</span><span>在瀏覽器中以 Pyodide 執行</span></footer>
+</div></div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script src="https://cdn.jsdelivr.net/pyodide/v0.29.5/full/pyodide.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
