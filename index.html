@@ -3,7 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>EF 測驗批次分析</title>
+<title>執行功能測驗分析</title>
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="icon" href="favicon-32.png" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
@@ -13,40 +16,13 @@
 <header class="nav">
   <span class="logo"><svg viewBox="0 0 26 26" aria-hidden="true"><rect x="1" y="1" width="20" height="20" fill="none" stroke="#1d1d1b"/><rect x="5" y="5" width="20" height="20" fill="none" stroke="#1d1d1b"/><rect x="8" y="14" width="5" height="5" fill="#1d1d1b"/></svg>EF ANALYSIS</span>
   <div class="navr">
-    <nav class="links"><a href="#files">Files</a><a href="#outputs">Outputs</a><a href="#results">Results</a></nav>
     <div class="engine" id="engine" data-s="load" role="status" aria-live="polite"><span class="dot"></span><span id="engineText">正在載入分析引擎</span></div>
-    <div class="circles" aria-label="支援的測驗代碼"><span title="Flanker">F</span><span title="N-back">N</span><span title="DCCS">D</span><span title="WCST">W</span></div>
   </div>
 </header>
 
-<section class="hero" aria-label="加入檔案">
-  <div class="htext">
-    <h1>把資料夾拖進來，<br>直接拿到 Excel。</h1>
-    <p class="lede">Flanker、N-back、DCCS、WCST 批次分析。程式會自動挑出「個案ID＋測驗縮寫.txt」的檔案，例如 NMY001F.txt，其他檔案會略過。</p>
-    <div class="btns">
-      <label class="rect">選擇資料夾<input type="file" id="pickDir" webkitdirectory multiple></label>
-      <label class="rect line">選擇檔案<input type="file" id="pickFiles" accept=".txt" multiple></label>
-    </div>
-    <svg class="mark" viewBox="0 0 30 38" aria-hidden="true"><path d="M15 1 29 19 15 37 1 19Z" fill="none" stroke="#1d1d1b"/><path d="M1 19h28L15 37Z" fill="#1d1d1b"/><path d="M8 10h14M5 14h20" stroke="#1d1d1b" stroke-width=".8"/></svg>
-  </div>
-  <div class="drop" id="tray">
-    <svg viewBox="0 0 120 92" aria-hidden="true" fill="none" stroke="#1d1d1b" stroke-width="1.1">
-      <rect x="10" y="14" width="78" height="58"/><rect x="18" y="8" width="78" height="58"/><rect x="26" y="2" width="78" height="58" fill="#fbf9f4"/>
-      <circle cx="65" cy="31" r="16"/><circle cx="65" cy="31" r="11"/>
-      <path d="M65 38V24m-5 5 5-5 5 5" stroke-linecap="round" stroke-linejoin="round"/>
-      <path d="M2 88h116" stroke-dasharray="2 4"/>
-    </svg>
-    <b>把一個或多個資料夾拖到這裡</b>
-    <small>可以一次拖好幾個，也可以分好幾次拖</small>
-  </div>
-</section>
-
-<section class="spec" aria-label="批次規格">
-  <p class="lab">Batch spec</p>
-  <div><strong>20</strong><span>每批檔案上限</span></div>
-  <div><strong>0</strong><span>上傳到伺服器的資料</span></div>
-  <div><strong>~15s</strong><span>第一次載入時間</span></div>
-  <div><strong>.xlsx</strong><span>每個檔案一份</span></div>
+<section class="intro">
+  <h1>把資料夾拖進來，<br>直接拿到 Excel。</h1>
+  <svg class="mark" viewBox="0 0 30 38" aria-hidden="true"><path d="M15 1 29 19 15 37 1 19Z" fill="none" stroke="#1d1d1b"/><path d="M1 19h28L15 37Z" fill="#1d1d1b"/><path d="M8 10h14M5 14h20" stroke="#1d1d1b" stroke-width=".8"/></svg>
 </section>
 
 <section class="split" id="outputs" aria-label="各測驗的輸出">
@@ -59,10 +35,30 @@
   </div>
 </section>
 
+<section class="upload" aria-label="加入檔案">
+  <div class="drop" id="tray" data-state="idle">
+    <svg class="ic-idle" viewBox="0 0 120 92" aria-hidden="true" fill="none" stroke="#1d1d1b" stroke-width="1.1">
+      <rect x="10" y="14" width="78" height="58"/><rect x="18" y="8" width="78" height="58"/><rect x="26" y="2" width="78" height="58" fill="#fbf9f4"/>
+      <circle cx="65" cy="31" r="16"/><circle cx="65" cy="31" r="11"/>
+      <path d="M65 38V24m-5 5 5-5 5 5" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M2 88h116" stroke-dasharray="2 4"/>
+    </svg>
+    <svg class="ic-ok" viewBox="0 0 72 72" aria-hidden="true" fill="none" stroke="#3b6b4f" stroke-width="2"><circle cx="36" cy="36" r="33"/><path d="M22 37l10 10 19-21" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    <svg class="ic-warn" viewBox="0 0 72 72" aria-hidden="true" fill="none" stroke="#b07a1e" stroke-width="2"><circle cx="36" cy="36" r="33"/><path d="M36 18v24" stroke-width="3" stroke-linecap="round"/><circle cx="36" cy="52" r="2.2" fill="#b07a1e" stroke="none"/></svg>
+    <b id="dropTitle">把一個或多個資料夾拖到這裡</b>
+    <small id="dropSub">可以一次拖好幾個，也可以分好幾次拖</small>
+    <div class="btns">
+      <label class="rect">選擇資料夾<input type="file" id="pickDir" webkitdirectory multiple></label>
+      <label class="rect line">選擇檔案<input type="file" id="pickFiles" accept=".txt" multiple></label>
+    </div>
+    <a class="jump" href="#files">查看待分析檔案 ↓</a>
+  </div>
+</section>
+
 <section class="split" id="files" aria-label="待分析檔案">
   <div class="side">
-    <h2>待分析<br>檔案<span class="count" id="count">0 / 20</span></h2>
-    <p>一次最多 20 個檔案，可以分好幾次加入。格式不符或檔名重複的檔案會自動略過。資料只在這台電腦的瀏覽器裡處理。</p>
+    <h2>待分析檔案<span class="count" id="count">0 / 20</span></h2>
+    <p>一次最多20個檔案，可以分好幾次加入。格式不符或檔名重複的檔案會自動略過。資料只在這台電腦的瀏覽器裡處理</p>
     <div class="actions">
       <button class="rect" id="run" disabled>完成，開始分析</button>
       <button class="rect line" id="clear" disabled>清空清單</button>
@@ -75,14 +71,13 @@
 
 <section class="split" id="results" hidden aria-label="分析結果">
   <div class="side">
-    <h2>分析<br>結果</h2>
+    <h2>分析結果</h2>
     <p id="sum"></p>
     <button class="rect" id="zipBtn" hidden>下載全部 Excel（zip）</button>
   </div>
   <div class="main"><div class="cards" id="cards"></div></div>
 </section>
 
-<footer><span>計分程式與 Colab 版 FlankerNbackDCCSWCST_analysis 相同</span><span>在瀏覽器中以 Pyodide 執行</span></footer>
 </div></div>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 

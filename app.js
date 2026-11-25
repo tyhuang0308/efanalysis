@@ -1,4 +1,4 @@
-// EF 測驗批次分析：頁面互動。計分邏輯在 analysis.py。
+// 執行功能測驗分析：頁面互動。計分邏輯在 analysis.py。
 {
 const PYO = 'https://cdn.jsdelivr.net/pyodide/v0.29.5/full/';
 const MAXFILES = 20;
@@ -12,6 +12,9 @@ const kept = new Map();      // path -> File
 const skipped = new Map();   // path -> reason
 const outputs = new Map();   // xlsx name -> Uint8Array
 let zipBytes = null;
+let fresh = new Set();       // paths added by the latest drop or pick, highlighted briefly
+let freshT = 0;
+let opSkips = 0;             // files skipped during the current drop or pick
 
 function setEngine(s, text){ $('engine').dataset.s = s; $('engineText').textContent = text; refresh(); }
 let toastT = 0;
@@ -22,8 +25,8 @@ const baseName = p => p.split('/').pop();
 function addFile(path, file){
   const name = baseName(path);
   if (!name || name.startsWith('.')) return;
-  if (!VALID.test(name)) { skipped.set(path, '檔名不符合格式'); return; }
-  for (const p of kept.keys()) if (p !== path && baseName(p).toLowerCase() === name.toLowerCase()) { skipped.set(path, '和 ' + p + ' 檔名重複'); return; }
+  if (!VALID.test(name)) { skipped.set(path, '檔名不符合格式'); opSkips++; return; }
+  for (const p of kept.keys()) if (p !== path && baseName(p).toLowerCase() === name.toLowerCase()) { skipped.set(path, '和 ' + p + ' 檔名重複'); opSkips++; return; }
   kept.set(path, file);
 }
 
@@ -40,9 +43,9 @@ async function walk(en){
 function refresh(){
   const q = $('queue'); q.replaceChildren();
   const items = [...kept.keys()].sort((a, b) => baseName(a).localeCompare(baseName(b)));
-  if (!items.length) q.append(el('li', 'empty', '還沒有檔案。把資料夾拖到左邊，或按「選擇資料夾」。'));
+  if (!items.length) q.append(el('li', 'empty', '還沒有檔案。把資料夾拖到上方的框裡，或按「選擇資料夾」。'));
   for (const p of items) {
-    const li = el('li'); const name = baseName(p);
+    const li = el('li', fresh.has(p) ? 'new' : ''); const name = baseName(p);
     li.append(el('span', 'chip', TEST[name.slice(-5, -4).toUpperCase()] || '?'));
     const info = el('span', 'nm', name); if (p !== name) info.append(el('span', 'pt', p));
     const rm = el('button', '', '移除'); rm.setAttribute('aria-label', '移除 ' + name);
@@ -60,24 +63,67 @@ function refresh(){
   $('skipList').replaceChildren(...[...skipped].map(([p, why]) => el('li', '', p + '（' + why + '）')));
 }
 
+// ---- Drop zone: clear feedback for every drop or pick ----
+const tray = $('tray');
+const IDLE = ['把一個或多個資料夾拖到這裡', '可以一次拖好幾個，也可以分好幾次拖'];
+function setDrop(state, title, sub){
+  tray.dataset.state = state;
+  $('dropTitle').textContent = title; $('dropSub').textContent = sub;
+}
+
+// Run one add operation (drop or picker) and report what it changed.
+async function ingest(work){
+  const before = new Set(kept.keys()); opSkips = 0;
+  setDrop('reading', '正在讀取…', '資料夾比較大時要等幾秒');
+  await work();
+  const added = [...kept.keys()].filter(p => !before.has(p));
+  const newSkips = opSkips;
+  fresh = new Set(added); clearTimeout(freshT); freshT = setTimeout(() => { fresh = new Set(); }, 3200);
+  refresh();
+  const total = kept.size;
+  const skipNote = newSkips ? '，略過 ' + newSkips + ' 個不符合格式或重複的檔案' : '';
+  if (added.length) {
+    setDrop('done', '已加入 ' + added.length + ' 個檔案', '清單裡共有 ' + total + ' 個檔案' + skipNote + '。可以繼續拖入，或到下方按「完成，開始分析」。');
+    toast('已加入 ' + added.length + ' 個檔案');
+  } else if (newSkips) {
+    setDrop('warn', '沒有找到符合格式的檔案', '略過了 ' + newSkips + ' 個檔案。檔名要像 NMY001F.txt（個案ID＋F、N、D 或 W）。');
+  } else if (before.size) {
+    setDrop('warn', '這些檔案已經在清單裡了', '清單裡共有 ' + total + ' 個檔案。');
+  } else {
+    setDrop('warn', '沒有讀到任何檔案', '請拖入資料夾或 .txt 檔，或改按下方的按鈕選擇。');
+  }
+}
+
 // Keep stray drops from replacing the page
 ['dragover', 'drop'].forEach(t => window.addEventListener(t, e => e.preventDefault()));
-const tray = $('tray');
-tray.addEventListener('dragover', e => { e.preventDefault(); tray.classList.add('over'); });
-tray.addEventListener('dragleave', () => tray.classList.remove('over'));
+let saved = null;
+tray.addEventListener('dragenter', e => {
+  e.preventDefault();
+  if (tray.dataset.state === 'over') return;
+  saved = [tray.dataset.state, $('dropTitle').textContent, $('dropSub').textContent];
+  setDrop('over', '放開滑鼠，加入這些檔案', '資料夾裡符合格式的 .txt 會自動挑出來');
+});
+tray.addEventListener('dragover', e => e.preventDefault());
+tray.addEventListener('dragleave', e => {
+  if (tray.contains(e.relatedTarget)) return;
+  if (tray.dataset.state === 'over' && saved) setDrop(...saved);
+});
 tray.addEventListener('drop', async e => {
-  e.preventDefault(); tray.classList.remove('over');
-  const entries = [...e.dataTransfer.items].map(i => i.webkitGetAsEntry && i.webkitGetAsEntry()).filter(Boolean);
-  say('讀取資料夾中…');
-  if (entries.length) { for (const en of entries) await walk(en); }
-  else for (const f of e.dataTransfer.files) addFile(f.name, f);
-  refresh();
+  e.preventDefault();
+  const items = [...e.dataTransfer.items];
+  const entries = items.map(i => i.webkitGetAsEntry && i.webkitGetAsEntry()).filter(Boolean);
+  const files = [...e.dataTransfer.files];
+  await ingest(async () => {
+    if (entries.length) { for (const en of entries) await walk(en); }
+    else for (const f of files) addFile(f.name, f);
+  });
 });
-for (const id of ['pickDir', 'pickFiles']) $(id).addEventListener('change', e => {
-  for (const f of e.target.files) addFile(f.webkitRelativePath || f.name, f);
-  e.target.value = ''; refresh();
+for (const id of ['pickDir', 'pickFiles']) $(id).addEventListener('change', async e => {
+  const files = [...e.target.files]; e.target.value = '';
+  if (!files.length) return;
+  await ingest(async () => { for (const f of files) addFile(f.webkitRelativePath || f.name, f); });
 });
-$('clear').onclick = () => { kept.clear(); skipped.clear(); refresh(); };
+$('clear').onclick = () => { kept.clear(); skipped.clear(); fresh = new Set(); setDrop('idle', ...IDLE); refresh(); };
 
 
 // Files loaded next to this page. Keep their names in sync with the repository.
@@ -135,7 +181,7 @@ $('run').onclick = async () => {
     runOne.destroy();
     const z = py.runPython('make_zip()');
     if (z) { zipBytes = py.FS.readFile(z); $('zipBtn').hidden = false; }
-    $('sum').textContent = ok ? ok + ' 個成功' + (bad ? '、' + bad + ' 個失敗' : '') + '。每個 Excel 都有 results 和 analysis 工作表，WCST 另有 learning to learn index。'
+    $('sum').textContent = ok ? ok + '個成功！' + (bad ? bad + '個失敗，請看下方的錯誤訊息。' : '')
                               : '沒有成功產生任何 Excel 檔，請看下方錯誤訊息。';
   } catch (err) {
     console.error(err); say('分析時發生錯誤：' + (err && err.message || err), true);
