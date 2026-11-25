@@ -14,7 +14,7 @@ const outputs = new Map();   // xlsx name -> Uint8Array
 let zipBytes = null;
 let fresh = new Set();       // paths added by the latest drop or pick, highlighted briefly
 let freshT = 0;
-let opSkips = 0;             // files skipped during the current drop or pick
+let opInvalid = 0, opDup = 0; // during the current drop or pick: wrong file names / files already in the list
 
 function setEngine(s, text){ $('engine').dataset.s = s; $('engineText').textContent = text; refresh(); }
 let toastT = 0;
@@ -25,8 +25,9 @@ const baseName = p => p.split('/').pop();
 function addFile(path, file){
   const name = baseName(path);
   if (!name || name.startsWith('.')) return;
-  if (!VALID.test(name)) { skipped.set(path, '檔名不符合格式'); opSkips++; return; }
-  for (const p of kept.keys()) if (p !== path && baseName(p).toLowerCase() === name.toLowerCase()) { skipped.set(path, '和' + p + '檔名重複'); opSkips++; return; }
+  if (!VALID.test(name)) { skipped.set(path, '檔名不符合格式'); opInvalid++; return; }
+  if (kept.has(path)) { kept.set(path, file); opDup++; return; }   // same file added again
+  for (const p of kept.keys()) if (baseName(p).toLowerCase() === name.toLowerCase()) { skipped.set(path, '和' + p + '檔名重複'); opDup++; return; }
   kept.set(path, file);
 }
 
@@ -73,21 +74,20 @@ function setDrop(state, title, sub){
 
 // Run one add operation (drop or picker) and report what it changed.
 async function ingest(work){
-  const before = new Set(kept.keys()); opSkips = 0;
+  const before = new Set(kept.keys()); opInvalid = 0; opDup = 0;
   setDrop('reading', '正在讀取…', '資料夾比較大時要等幾秒');
   await work();
   const added = [...kept.keys()].filter(p => !before.has(p));
-  const newSkips = opSkips;
   fresh = new Set(added); clearTimeout(freshT); freshT = setTimeout(() => { fresh = new Set(); }, 3200);
   refresh();
   const total = kept.size;
   if (added.length) {
     setDrop('done', '已加入' + added.length + '個檔案', '清單裡共有' + total + '個檔案。可以繼續拖入，或到下方按「完成，開始分析」');
     toast('已加入' + added.length + '個檔案');
-  } else if (newSkips) {
-    setDrop('warn', '沒有找到符合格式的檔案', '請檢查檔名');
-  } else if (before.size) {
+  } else if (opDup) {
     setDrop('warn', '這些檔案已經在清單裡了', '清單裡共有' + total + '個檔案');
+  } else if (opInvalid) {
+    setDrop('warn', '沒有找到符合格式的檔案', '請檢查檔名');
   } else {
     setDrop('warn', '沒有讀到任何檔案', '請拖入資料夾或.txt檔，或改按下方的按鈕選擇');
   }
