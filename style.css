@@ -99,7 +99,6 @@ pre{overflow-x:auto;font-size:12px;background:var(--bg);padding:10px;border-radi
 .drop b{font-size:20px;font-weight:500;display:block}
 .drop small{display:block;margin-top:6px;color:var(--mute);font-size:14px;max-width:34em}
 .drop .btns{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin-top:22px}
-.drop .jump{display:none;margin-top:14px;font-size:14px;color:var(--ink)}
 .drop[data-state=over]{background:var(--panel2);border:2px solid var(--ink)}
 .drop[data-state=over] *{pointer-events:none}
 .drop[data-state=reading]{background:var(--panel2)}
@@ -108,7 +107,6 @@ pre{overflow-x:auto;font-size:12px;background:var(--bg);padding:10px;border-radi
 .drop[data-state=warn]{background:#f6ecdc;border:2px solid #b07a1e}
 .drop[data-state=warn] .ic-warn{display:block}
 .drop[data-state=done] .ic-idle,.drop[data-state=warn] .ic-idle{display:none}
-.drop[data-state=done] .jump,.drop[data-state=warn] .jump{display:inline-block}
 .drop[data-state=done] b{color:var(--ok)}
 @media(prefers-reduced-motion:reduce){.queue li.new{animation:none;background:#e3efe3}}
 

@@ -21,17 +21,17 @@
 </header>
 
 <section class="intro">
-  <h1>把資料夾拖進來，<br>直接拿到 Excel。</h1>
+  <h1>把資料夾拖進來，<br>直接拿到Excel</h1>
   <svg class="mark" viewBox="0 0 30 38" aria-hidden="true"><path d="M15 1 29 19 15 37 1 19Z" fill="none" stroke="#1d1d1b"/><path d="M1 19h28L15 37Z" fill="#1d1d1b"/><path d="M8 10h14M5 14h20" stroke="#1d1d1b" stroke-width=".8"/></svg>
 </section>
 
 <section class="split" id="outputs" aria-label="各測驗的輸出">
   <div class="side"><p class="lab">What it scores</p></div>
   <div class="main svc">
-    <div><svg viewBox="0 0 44 44" fill="none" stroke="#1d1d1b" stroke-width="1"><path d="M4 22l6-6m-6 6 6 6M14 22l6-6m-6 6 6 6M24 22l6-6m-6 6 6 6M34 22l6-6m-6 6 6 6"/><path d="M4 22h36"/></svg><span><h3>Flanker · F</h3><p>一致與不一致嘗試的正確率、反應時間，以及衝突效應 Cnf。</p></span></div>
-    <div><svg viewBox="0 0 44 44" fill="none" stroke="#1d1d1b" stroke-width="1"><rect x="4" y="16" width="20" height="20"/><rect x="11" y="10" width="20" height="20"/><rect x="18" y="4" width="20" height="20"/></svg><span><h3>N-back · N</h3><p>1-back、2-back（有做就含 3-back）的正確率與反應時間。</p></span></div>
-    <div><svg viewBox="0 0 44 44" fill="none" stroke="#1d1d1b" stroke-width="1"><circle cx="16" cy="22" r="12"/><circle cx="28" cy="22" r="12"/><circle cx="22" cy="22" r="5"/></svg><span><h3>DCCS · D</h3><p>單一規則與雙規則區段的正確率與反應時間。</p></span></div>
-    <div><svg viewBox="0 0 44 44" fill="none" stroke="#1d1d1b" stroke-width="1"><path d="M22 3c1.5 12 7 17.5 19 19-12 1.5-17.5 7-19 19-1.5-12-7-17.5-19-19 12-1.5 17.5-7 19-19Z"/></svg><span><h3>WCST · W</h3><p>持續性反應與錯誤、概念層次反應、完成類別數、learning to learn。</p></span></div>
+    <div><svg viewBox="0 0 44 44" fill="none" stroke="#1d1d1b" stroke-width="1"><path d="M4 22l6-6m-6 6 6 6M14 22l6-6m-6 6 6 6M24 22l6-6m-6 6 6 6M34 22l6-6m-6 6 6 6"/><path d="M4 22h36"/></svg><span><h3>Flanker · F</h3><p>一致與不一致嘗試的正確率、反應時間，以及衝突效應Cnf</p></span></div>
+    <div><svg viewBox="0 0 44 44" fill="none" stroke="#1d1d1b" stroke-width="1"><rect x="4" y="16" width="20" height="20"/><rect x="11" y="10" width="20" height="20"/><rect x="18" y="4" width="20" height="20"/></svg><span><h3>N-back · N</h3><p>1-back、2-back（有做就含3-back）的正確率與反應時間</p></span></div>
+    <div><svg viewBox="0 0 44 44" fill="none" stroke="#1d1d1b" stroke-width="1"><circle cx="16" cy="22" r="12"/><circle cx="28" cy="22" r="12"/><circle cx="22" cy="22" r="5"/></svg><span><h3>DCCS · D</h3><p>單一規則與雙規則區段的正確率與反應時間</p></span></div>
+    <div><svg viewBox="0 0 44 44" fill="none" stroke="#1d1d1b" stroke-width="1"><path d="M22 3c1.5 12 7 17.5 19 19-12 1.5-17.5 7-19 19-1.5-12-7-17.5-19-19 12-1.5 17.5-7 19-19Z"/></svg><span><h3>WCST · W</h3><p>持續性反應與錯誤、概念層次反應、完成類別數、learning to learn</p></span></div>
   </div>
 </section>
 
@@ -51,7 +51,6 @@
       <label class="rect">選擇資料夾<input type="file" id="pickDir" webkitdirectory multiple></label>
       <label class="rect line">選擇檔案<input type="file" id="pickFiles" accept=".txt" multiple></label>
     </div>
-    <a class="jump" href="#files">查看待分析檔案 ↓</a>
   </div>
 </section>
 
@@ -73,7 +72,7 @@
   <div class="side">
     <h2>分析結果</h2>
     <p id="sum"></p>
-    <button class="rect" id="zipBtn" hidden>下載全部 Excel（zip）</button>
+    <button class="rect" id="zipBtn" hidden>下載全部Excel（zip）</button>
   </div>
   <div class="main"><div class="cards" id="cards"></div></div>
 </section>

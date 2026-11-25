@@ -26,7 +26,7 @@ function addFile(path, file){
   const name = baseName(path);
   if (!name || name.startsWith('.')) return;
   if (!VALID.test(name)) { skipped.set(path, '檔名不符合格式'); opSkips++; return; }
-  for (const p of kept.keys()) if (p !== path && baseName(p).toLowerCase() === name.toLowerCase()) { skipped.set(path, '和 ' + p + ' 檔名重複'); opSkips++; return; }
+  for (const p of kept.keys()) if (p !== path && baseName(p).toLowerCase() === name.toLowerCase()) { skipped.set(path, '和' + p + '檔名重複'); opSkips++; return; }
   kept.set(path, file);
 }
 
@@ -43,12 +43,12 @@ async function walk(en){
 function refresh(){
   const q = $('queue'); q.replaceChildren();
   const items = [...kept.keys()].sort((a, b) => baseName(a).localeCompare(baseName(b)));
-  if (!items.length) q.append(el('li', 'empty', '還沒有檔案。把資料夾拖到上方的框裡，或按「選擇資料夾」。'));
+  if (!items.length) q.append(el('li', 'empty', '還沒有檔案。把資料夾拖到上方的框裡，或按「選擇資料夾」'));
   for (const p of items) {
     const li = el('li', fresh.has(p) ? 'new' : ''); const name = baseName(p);
     li.append(el('span', 'chip', TEST[name.slice(-5, -4).toUpperCase()] || '?'));
     const info = el('span', 'nm', name); if (p !== name) info.append(el('span', 'pt', p));
-    const rm = el('button', '', '移除'); rm.setAttribute('aria-label', '移除 ' + name);
+    const rm = el('button', '', '移除'); rm.setAttribute('aria-label', '移除' + name);
     rm.onclick = () => { kept.delete(p); refresh(); };
     li.append(info, rm); q.append(li);
   }
@@ -57,9 +57,9 @@ function refresh(){
   $('run').disabled = !ready || busy || !n || over;
   $('run').textContent = busy ? $('run').textContent : (ready ? '完成，開始分析' : '分析引擎載入中…');
   $('clear').disabled = busy || (!n && !skipped.size);
-  if (!busy) say(over ? '目前有 ' + n + ' 個符合格式的檔案，一次最多 ' + MAXFILES + ' 個，請移除一些或分批分析。' : '', over);
+  if (!busy) say(over ? '目前有' + n + '個符合格式的檔案，一次最多' + MAXFILES + '個，請移除一些或分批分析' : '', over);
   $('skipBox').hidden = !skipped.size;
-  $('skipSum').textContent = '已略過 ' + skipped.size + ' 個檔案';
+  $('skipSum').textContent = '已略過' + skipped.size + '個檔案';
   $('skipList').replaceChildren(...[...skipped].map(([p, why]) => el('li', '', p + '（' + why + '）')));
 }
 
@@ -81,16 +81,15 @@ async function ingest(work){
   fresh = new Set(added); clearTimeout(freshT); freshT = setTimeout(() => { fresh = new Set(); }, 3200);
   refresh();
   const total = kept.size;
-  const skipNote = newSkips ? '，略過 ' + newSkips + ' 個不符合格式或重複的檔案' : '';
   if (added.length) {
-    setDrop('done', '已加入 ' + added.length + ' 個檔案', '清單裡共有 ' + total + ' 個檔案' + skipNote + '。可以繼續拖入，或到下方按「完成，開始分析」。');
-    toast('已加入 ' + added.length + ' 個檔案');
+    setDrop('done', '已加入' + added.length + '個檔案', '清單裡共有' + total + '個檔案。可以繼續拖入，或到下方按「完成，開始分析」');
+    toast('已加入' + added.length + '個檔案');
   } else if (newSkips) {
-    setDrop('warn', '沒有找到符合格式的檔案', '略過了 ' + newSkips + ' 個檔案。檔名要像 NMY001F.txt（個案ID＋F、N、D 或 W）。');
+    setDrop('warn', '沒有找到符合格式的檔案', '請檢查檔名');
   } else if (before.size) {
-    setDrop('warn', '這些檔案已經在清單裡了', '清單裡共有 ' + total + ' 個檔案。');
+    setDrop('warn', '這些檔案已經在清單裡了', '清單裡共有' + total + '個檔案');
   } else {
-    setDrop('warn', '沒有讀到任何檔案', '請拖入資料夾或 .txt 檔，或改按下方的按鈕選擇。');
+    setDrop('warn', '沒有讀到任何檔案', '請拖入資料夾或.txt檔，或改按下方的按鈕選擇');
   }
 }
 
@@ -101,7 +100,7 @@ tray.addEventListener('dragenter', e => {
   e.preventDefault();
   if (tray.dataset.state === 'over') return;
   saved = [tray.dataset.state, $('dropTitle').textContent, $('dropSub').textContent];
-  setDrop('over', '放開滑鼠，加入這些檔案', '資料夾裡符合格式的 .txt 會自動挑出來');
+  setDrop('over', '放開滑鼠，加入這些檔案', '資料夾裡符合格式的.txt會自動挑出來');
 });
 tray.addEventListener('dragover', e => e.preventDefault());
 tray.addEventListener('dragleave', e => {
@@ -132,16 +131,16 @@ const PY_FILES = ['analysis.py', 'runner.py'];
 
 async function fetchOk(url, kind){
   const r = await fetch(url, { cache: 'no-cache' });
-  if (!r.ok) throw new Error('讀不到 ' + url + '（HTTP ' + r.status + '），請確認這個檔案有上傳到 GitHub');
+  if (!r.ok) throw new Error('讀不到' + url + '（HTTP ' + r.status + '），請確認這個檔案有上傳到GitHub');
   return kind === 'text' ? r.text() : new Uint8Array(await r.arrayBuffer());
 }
 
 async function boot(){
   try {
-    if (location.protocol === 'file:') throw new Error('這個版本要用網址打開（例如 GitHub Pages），不能直接雙擊 index.html');
-    if (typeof loadPyodide !== 'function') throw new Error('無法連到 Pyodide 伺服器，請確認網路連線');
+    if (location.protocol === 'file:') throw new Error('這個版本要用網址打開（例如GitHub Pages），不能直接雙擊index.html');
+    if (typeof loadPyodide !== 'function') throw new Error('無法連到Pyodide伺服器，請確認網路連線');
     py = await loadPyodide({ indexURL: PYO });
-    setEngine('load', '正在載入 pandas…');
+    setEngine('load', '正在載入pandas…');
     await py.loadPackage(['numpy', 'pandas'], { messageCallback: () => {} });
     for (const url of WHEELS) py.FS.writeFile('/tmp/' + url.split('/').pop(), await fetchOk(url));
     py.globals.set('WHEEL_FILES', py.toPy(WHEELS.map(u => '/tmp/' + u.split('/').pop())));
@@ -168,8 +167,8 @@ $('run').onclick = async () => {
     const runOne = py.globals.get('run_one');
     for (let i = 0; i < items.length; i++) {
       const [path, file] = items[i];
-      $('run').textContent = '分析中 ' + (i + 1) + ' / ' + items.length;
-      $('sum').textContent = '正在分析 ' + baseName(path) + '…';
+      $('run').textContent = '分析中' + (i + 1) + ' / ' + items.length;
+      $('sum').textContent = '正在分析' + baseName(path) + '…';
       await sleep(20);
       const full = '/work/in/' + path;
       py.FS.mkdirTree(full.slice(0, full.lastIndexOf('/')));
@@ -181,8 +180,8 @@ $('run').onclick = async () => {
     runOne.destroy();
     const z = py.runPython('make_zip()');
     if (z) { zipBytes = py.FS.readFile(z); $('zipBtn').hidden = false; }
-    $('sum').textContent = ok ? ok + '個成功！' + (bad ? bad + '個失敗，請看下方的錯誤訊息。' : '')
-                              : '沒有成功產生任何 Excel 檔，請看下方錯誤訊息。';
+    $('sum').textContent = ok ? ok + '個成功！' + (bad ? bad + '個失敗，請看下方的錯誤訊息' : '')
+                              : '沒有成功產生任何Excel檔，請看下方錯誤訊息';
   } catch (err) {
     console.error(err); say('分析時發生錯誤：' + (err && err.message || err), true);
   } finally {
@@ -201,7 +200,7 @@ function card(rec, path){
   const cap = el('div', 'cap'); const left = el('div');
   left.append(el('span', 'nm', rec.file), el('span', 'st', rec.ok ? '完成' : '失敗'));
   cap.append(left, el('span', 'code', rec.test)); c.append(cap);
-  if (rec.ok) { const btn = el('button', 'rect', '下載 ' + rec.out); btn.onclick = () => saveFile(rec.out, outputs.get(rec.out)); c.append(btn); }
+  if (rec.ok) { const btn = el('button', 'rect', '下載' + rec.out); btn.onclick = () => saveFile(rec.out, outputs.get(rec.out)); c.append(btn); }
   return c;
 }
 
@@ -215,13 +214,13 @@ async function saveFile(name, bytes){
     const a = el('a'); a.href = URL.createObjectURL(blob); a.download = name;
     document.body.append(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 4000); return;
   }
-  if (host === null) { toast('這個畫面不能下載檔案，請在電腦的瀏覽器中開啟這個頁面。', true); return; }
-  try { await host.save({ filename: name, data: blob }); toast('已下載 ' + name); }
+  if (host === null) { toast('這個畫面不能下載檔案，請在電腦的瀏覽器中開啟這個頁面', true); return; }
+  try { await host.save({ filename: name, data: blob }); toast('已下載' + name); }
   catch (e) {
     const code = e && e.code;
     if (code === 'declined') return;
-    if (code === 'rate_limited') toast('下載確認視窗已經開著，請先處理它再試一次。', true);
-    else if (code === 'host_unavailable') toast('這個 App 不能存檔，請改用電腦的瀏覽器開啟這個頁面。', true);
+    if (code === 'rate_limited') toast('下載確認視窗已經開著，請先處理它再試一次', true);
+    else if (code === 'host_unavailable') toast('這個App不能存檔，請改用電腦的瀏覽器開啟這個頁面', true);
     else toast('下載失敗：' + (e && e.message || code), true);
   }
 }
