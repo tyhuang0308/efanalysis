@@ -48,7 +48,9 @@ function refresh(){
   if (!items.length) q.append(el('li', 'empty', '還沒有檔案。把資料夾拖到上方的框裡，或按「選擇資料夾」'));
   for (const p of items) {
     const li = el('li', fresh.has(p) ? 'new' : ''); const name = baseName(p);
-    li.append(el('span', 'chip', TEST[name.slice(-5, -4).toUpperCase()] || '?'));
+    const code = name.slice(-5, -4).toUpperCase();
+    const chip = el('span', 'chip', TEST[code] || '?'); chip.dataset.t = code;
+    li.append(chip);
     const info = el('span', 'nm', name); if (p !== name) info.append(el('span', 'pt', p));
     const rm = el('button', '', '移除'); rm.setAttribute('aria-label', '移除' + name);
     rm.onclick = () => { kept.delete(p); refresh(); };
