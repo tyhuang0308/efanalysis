@@ -192,17 +192,17 @@ $('run').onclick = async () => {
 };
 
 function card(rec, path){
-  const c = el('article', 'card' + (rec.ok ? '' : ' fail'));
-  if (rec.ok) { const box = el('div', 'tbl'); box.innerHTML = rec.preview; c.append(box); } // pandas escapes cell values
-  else {
-    const box = el('div', 'tbl errbox'); box.append(el('p', 'errtxt', rec.error));
-    const d = el('details'); d.append(el('summary', '', '詳細錯誤訊息'), el('pre', '', rec.trace || '')); box.append(d); c.append(box);
+  const li = el('li', rec.ok ? '' : 'fail');
+  li.append(el('span', 'nm', rec.file), el('span', 'st', rec.ok ? '完成' : rec.error));
+  if (rec.ok) {
+    const btn = el('button', 'dl', '下載' + rec.out);
+    btn.onclick = () => saveFile(rec.out, outputs.get(rec.out));
+    li.append(btn);
+  } else {
+    li.append(el('span'));
+    if (rec.trace) { const d = el('details', 'why'); d.append(el('summary', '', '詳細錯誤訊息'), el('pre', '', rec.trace)); li.append(d); }
   }
-  const cap = el('div', 'cap'); const left = el('div');
-  left.append(el('span', 'nm', rec.file), el('span', 'st', rec.ok ? '完成' : '失敗'));
-  cap.append(left, el('span', 'code', rec.test)); c.append(cap);
-  if (rec.ok) { const btn = el('button', 'rect', '下載' + rec.out); btn.onclick = () => saveFile(rec.out, outputs.get(rec.out)); c.append(btn); }
-  return c;
+  return li;
 }
 
 $('zipBtn').onclick = () => zipBytes && saveFile('outputs.zip', zipBytes);

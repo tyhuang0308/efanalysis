@@ -8,43 +8,87 @@
 <link rel="icon" href="favicon-32.png" type="image/png" sizes="32x32">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<div class="page"><div class="frame">
+<div class="page">
 <header class="nav">
-  <span class="logo"><svg viewBox="0 0 26 26" aria-hidden="true"><rect x="1" y="1" width="20" height="20" fill="none" stroke="#1d1d1b"/><rect x="5" y="5" width="20" height="20" fill="none" stroke="#1d1d1b"/><rect x="8" y="14" width="5" height="5" fill="#1d1d1b"/></svg>EF ANALYSIS</span>
-  <div class="navr">
-    <div class="engine" id="engine" data-s="load" role="status" aria-live="polite"><span class="dot"></span><span id="engineText">正在載入分析引擎</span></div>
-  </div>
+  <span class="logo">EF<i>.</i></span>
+  <div class="engine" id="engine" data-s="load" role="status" aria-live="polite"><span class="dot"></span><span id="engineText">正在載入分析引擎</span></div>
 </header>
 
-<section class="intro">
-  <h1>把資料夾拖進來，<br>直接拿到Excel</h1>
-  <svg class="mark" viewBox="0 0 30 38" aria-hidden="true"><path d="M15 1 29 19 15 37 1 19Z" fill="none" stroke="#1d1d1b"/><path d="M1 19h28L15 37Z" fill="#1d1d1b"/><path d="M8 10h14M5 14h20" stroke="#1d1d1b" stroke-width=".8"/></svg>
+<section class="hero">
+  <div class="htext">
+    <p class="hi">執行功能測驗分析</p>
+    <h1>把資料夾拖進來，<br>直接拿到<em>Excel</em></h1>
+    <p class="tests-line">Flanker・N-back・DCCS・WCST</p>
+    <div class="btns">
+      <a class="rect" href="#upload">開始分析<span class="arr" aria-hidden="true">→</span></a>
+      <a class="rect line" href="#report">產生報告書<span class="arr" aria-hidden="true">↓</span></a>
+    </div>
+  </div>
+  <svg class="art" viewBox="0 0 480 380" role="img" aria-label="桌上的筆電顯示圖表，旁邊有資料夾和植物">
+    <g fill="none" stroke="#151515" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
+      <!-- lamp -->
+      <path d="M196 0v46"/>
+      <path d="M170 76a26 26 0 0 1 52 0z" fill="#fff"/>
+      <path d="M190 84l-4 9M196 86v10M202 84l4 9" stroke="#ee6a1f"/>
+      <circle cx="196" cy="79" r="5" fill="#ee6a1f" stroke="none"/>
+      <!-- shelf with books and plant -->
+      <path d="M330 104h120"/>
+      <rect x="342" y="56" width="12" height="48" rx="2" fill="#fff"/>
+      <rect x="356" y="48" width="12" height="56" rx="2" fill="#ee6a1f"/>
+      <rect x="370" y="62" width="11" height="42" rx="2" fill="#fff" transform="rotate(-10 375 83)"/>
+      <path d="M410 104l-6-28h34l-6 28z" fill="#ee6a1f"/>
+      <path d="M421 76c-2-14 2-26 12-34M421 76c-8-8-16-12-26-12M421 76c4-10 12-16 22-18"/>
+      <path d="M433 42c-8 4-10 12-8 18 8-2 12-10 8-18zM395 64c6 6 14 8 20 6-4-8-12-10-20-6zM443 58c-6 2-10 8-10 14 8 0 12-6 10-14z" fill="#fff"/>
+      <!-- desk -->
+      <path d="M30 340h420"/>
+      <rect x="70" y="236" width="340" height="14" rx="4" fill="#fff"/>
+      <path d="M92 250v90M388 250v90M92 300h40v40"/>
+      <!-- laptop -->
+      <rect x="160" y="118" width="164" height="110" rx="10" fill="#fff"/>
+      <path d="M140 236l14-10h176l14 10" fill="#fff"/>
+      <rect x="180" y="190" width="16" height="22" rx="2" fill="#ee6a1f" stroke="none"/>
+      <rect x="204" y="174" width="16" height="38" rx="2" fill="#ee6a1f" stroke="none" opacity=".55"/>
+      <rect x="228" y="160" width="16" height="52" rx="2" fill="#ee6a1f" stroke="none"/>
+      <rect x="252" y="180" width="16" height="32" rx="2" fill="#ee6a1f" stroke="none" opacity=".55"/>
+      <path d="M180 156l24-10 24 8 26-20 26 12" stroke-width="2.2"/>
+      <circle cx="280" cy="146" r="4" fill="#151515" stroke="none"/>
+      <path d="M180 212h120" stroke-width="1.6"/>
+      <!-- spreadsheet sheet -->
+      <path d="M86 140h44l14 14v78H86z" fill="#fff"/>
+      <path d="M130 140v14h14"/>
+      <path d="M96 170h38M96 184h38M96 198h38M96 212h38M110 160v64M122 160v64" stroke-width="1.6"/>
+      <rect x="96" y="160" width="14" height="10" fill="#ffe2cc" stroke="none"/>
+      <!-- folder -->
+      <path d="M340 236v-48a5 5 0 0 1 5-5h22l9 9h24a5 5 0 0 1 5 5v39" fill="#ee6a1f"/>
+      <path d="M340 236l6-34h64l-6 34" fill="#fff"/>
+      <!-- sparkles -->
+      <path d="M120 86l4 10 10 4-10 4-4 10-4-10-10-4 10-4z" fill="#ee6a1f" stroke="none"/>
+      <path d="M440 190l3 7 7 3-7 3-3 7-3-7-7-3 7-3z" fill="#151515" stroke="none"/>
+      <circle cx="60" cy="200" r="3" fill="#ee6a1f" stroke="none"/>
+      <circle cx="300" cy="40" r="3" fill="#151515" stroke="none"/>
+    </g>
+  </svg>
 </section>
 
-<section class="split" id="outputs" aria-label="各測驗的輸出">
-  <div class="side"><p class="lab">What it scores</p></div>
-  <div class="main svc">
-    <div><svg viewBox="0 0 44 44" fill="none" stroke="#1d1d1b" stroke-width="1"><path d="M4 22l6-6m-6 6 6 6M14 22l6-6m-6 6 6 6M24 22l6-6m-6 6 6 6M34 22l6-6m-6 6 6 6"/><path d="M4 22h36"/></svg><span><h3>Flanker · F</h3><p>一致與不一致嘗試的正確率、反應時間，以及衝突效應Cnf</p></span></div>
-    <div><svg viewBox="0 0 44 44" fill="none" stroke="#1d1d1b" stroke-width="1"><rect x="4" y="16" width="20" height="20"/><rect x="11" y="10" width="20" height="20"/><rect x="18" y="4" width="20" height="20"/></svg><span><h3>N-back · N</h3><p>1-back、2-back（有做就含3-back）的正確率與反應時間</p></span></div>
-    <div><svg viewBox="0 0 44 44" fill="none" stroke="#1d1d1b" stroke-width="1"><circle cx="16" cy="22" r="12"/><circle cx="28" cy="22" r="12"/><circle cx="22" cy="22" r="5"/></svg><span><h3>DCCS · D</h3><p>單一規則與雙規則區段的正確率與反應時間</p></span></div>
-    <div><svg viewBox="0 0 44 44" fill="none" stroke="#1d1d1b" stroke-width="1"><path d="M22 3c1.5 12 7 17.5 19 19-12 1.5-17.5 7-19 19-1.5-12-7-17.5-19-19 12-1.5 17.5-7 19-19Z"/></svg><span><h3>WCST · W</h3><p>持續性反應與錯誤、概念層次反應、完成類別數、learning to learn</p></span></div>
+<section class="sec" id="outputs" aria-label="各測驗的輸出">
+  <h2>What it scores</h2>
+  <div class="tiles">
+    <div class="tile"><span class="ic"><svg viewBox="0 0 44 44" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 22l5-5m-5 5 5 5M15 22l5-5m-5 5 5 5M24 22l5-5m-5 5 5 5M33 22l5-5m-5 5 5 5"/></svg></span><h3>Flanker<b>F</b></h3><p>一致與不一致嘗試的正確率、反應時間，以及衝突效應Cnf</p></div>
+    <div class="tile"><span class="ic"><svg viewBox="0 0 44 44" fill="none" stroke="currentColor" stroke-width="2"><rect x="6" y="17" width="18" height="18" rx="2"/><rect x="13" y="11" width="18" height="18" rx="2"/><rect x="20" y="5" width="18" height="18" rx="2"/></svg></span><h3>N-back<b>N</b></h3><p>1-back、2-back（有做就含3-back）的正確率與反應時間</p></div>
+    <div class="tile"><span class="ic"><svg viewBox="0 0 44 44" fill="none" stroke="currentColor" stroke-width="2"><circle cx="17" cy="22" r="11"/><circle cx="27" cy="22" r="11"/></svg></span><h3>DCCS<b>D</b></h3><p>單一規則與雙規則區段的正確率與反應時間</p></div>
+    <div class="tile"><span class="ic"><svg viewBox="0 0 44 44" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M22 5c1.4 10 6.6 15.2 17 17-10.4 1.8-15.6 7-17 17-1.4-10-6.6-15.2-17-17 10.4-1.8 15.6-7 17-17Z"/></svg></span><h3>WCST<b>W</b></h3><p>持續性反應與錯誤、概念層次反應、完成類別數、learning to learn</p></div>
   </div>
 </section>
 
-<section class="upload" aria-label="加入檔案">
+<section class="sec" id="upload" aria-label="加入檔案">
   <div class="drop" id="tray" data-state="idle">
-    <svg class="ic-idle" viewBox="0 0 120 92" aria-hidden="true" fill="none" stroke="#1d1d1b" stroke-width="1.1">
-      <rect x="10" y="14" width="78" height="58"/><rect x="18" y="8" width="78" height="58"/><rect x="26" y="2" width="78" height="58" fill="#fbf9f4"/>
-      <circle cx="65" cy="31" r="16"/><circle cx="65" cy="31" r="11"/>
-      <path d="M65 38V24m-5 5 5-5 5 5" stroke-linecap="round" stroke-linejoin="round"/>
-      <path d="M2 88h116" stroke-dasharray="2 4"/>
-    </svg>
-    <svg class="ic-ok" viewBox="0 0 72 72" aria-hidden="true" fill="none" stroke="#3b6b4f" stroke-width="2"><circle cx="36" cy="36" r="33"/><path d="M22 37l10 10 19-21" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
-    <svg class="ic-warn" viewBox="0 0 72 72" aria-hidden="true" fill="none" stroke="#b07a1e" stroke-width="2"><circle cx="36" cy="36" r="33"/><path d="M36 18v24" stroke-width="3" stroke-linecap="round"/><circle cx="36" cy="52" r="2.2" fill="#b07a1e" stroke="none"/></svg>
+    <span class="dic ic-idle"><svg viewBox="0 0 48 48" aria-hidden="true" fill="none" stroke="#ee6a1f" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 14a4 4 0 0 1 4-4h9l4 4h15a4 4 0 0 1 4 4v18a4 4 0 0 1-4 4H10a4 4 0 0 1-4-4z"/><path d="M24 33V21m-5 5 5-5 5 5"/></svg></span>
+    <span class="dic ic-ok"><svg viewBox="0 0 48 48" aria-hidden="true" fill="none" stroke="#2e7d4f" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M13 25l7 7 15-16"/></svg></span>
+    <span class="dic ic-warn"><svg viewBox="0 0 48 48" aria-hidden="true" fill="none" stroke="#b7791f" stroke-width="3" stroke-linecap="round"><path d="M24 13v15"/><circle cx="24" cy="35" r="1.6" fill="#b7791f"/></svg></span>
     <b id="dropTitle">把一個或多個資料夾拖到這裡</b>
     <small id="dropSub">可以一次拖好幾個，也可以分好幾次拖</small>
     <div class="btns">
@@ -54,7 +98,7 @@
   </div>
 </section>
 
-<section class="split" id="files" aria-label="待分析檔案">
+<section class="sec split" id="files" aria-label="待分析檔案">
   <div class="side">
     <h2>待分析檔案<span class="count" id="count">0 / 20</span></h2>
     <p>一次最多20個檔案，可以分好幾次加入。格式不符或檔名重複的檔案會自動略過。資料只在這台電腦的瀏覽器裡處理</p>
@@ -65,19 +109,21 @@
     <p class="msg" id="msg" aria-live="polite"></p>
     <details class="skip" id="skipBox" hidden><summary id="skipSum"></summary><ul id="skipList"></ul></details>
   </div>
-  <div class="main"><ul class="queue" id="queue"></ul></div>
+  <div class="main card"><ul class="queue" id="queue"></ul></div>
 </section>
 
-<section class="split" id="results" hidden aria-label="分析結果">
+<section class="sec split" id="results" hidden aria-label="分析結果">
   <div class="side">
     <h2>分析結果</h2>
-    <p id="sum"></p>
-    <button class="rect" id="zipBtn" hidden>下載全部Excel（zip）</button>
   </div>
-  <div class="main"><div class="cards" id="cards"></div></div>
+  <div class="main card">
+    <div class="actions"><button class="rect line" id="zipBtn" hidden>下載全部Excel（zip）</button></div>
+    <p class="msg" id="sum" aria-live="polite"></p>
+    <ul class="rlist" id="cards"></ul>
+  </div>
 </section>
 
-<section class="split" id="report" aria-label="產生報告書">
+<section class="sec split" id="report" aria-label="產生報告書">
   <div class="side">
     <h2>產生報告書</h2>
     <p>用Google帳號登入後輸入個案ID，網頁會讀取共享試算表的report工作表和報告書範本，產生Word檔</p>
@@ -87,20 +133,20 @@
     </div>
     <p class="msg" id="rpAuth" aria-live="polite"></p>
   </div>
-  <div class="main">
+  <div class="main card">
     <label class="lab" for="rpIds">個案ID</label>
     <textarea id="rpIds" rows="3" placeholder="例如：NMY001 NMY002（可以輸入多個，用空白或換行分開）" autocomplete="off" spellcheck="false"></textarea>
     <p class="hint" id="rpCheck" aria-live="polite"></p>
     <div class="actions">
       <button class="rect" id="rpRun">產生報告書</button>
+      <button class="rect line" id="rpCancel" hidden>取消</button>
       <button class="rect line" id="rpZip" hidden>下載全部報告書（zip）</button>
     </div>
     <p class="msg" id="rpMsg" aria-live="polite"></p>
     <ul class="rlist" id="rpList"></ul>
   </div>
 </section>
-
-</div></div>
+</div>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <script src="https://cdn.jsdelivr.net/pyodide/v0.29.5/full/pyodide.js"></script>

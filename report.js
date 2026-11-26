@@ -132,11 +132,20 @@ function check(){
 }
 $('rpIds').addEventListener('input', check);
 
+let cancelRun = null;        // set while reports are being generated
+
 function setBusy(on){
   busy = on;
   $('rpRun').disabled = on; $('rpLogin').disabled = on;
-  if (!on) $('rpRun').textContent = '產生報告書';
+  $('rpCancel').hidden = !on; $('rpCancel').disabled = false; $('rpCancel').textContent = '取消';
+  if (!on) { $('rpRun').textContent = '產生報告書'; cancelRun = null; }
 }
+
+$('rpCancel').onclick = () => {
+  if (!cancelRun) return;
+  $('rpCancel').disabled = true; $('rpCancel').textContent = '正在取消…';
+  cancelRun();
+};
 
 $('rpLogin').onclick = async () => {
   if (busy) return;
@@ -164,7 +173,7 @@ function row(rec){
   const mid = el('span', 'st', rec.ok ? '完成' : rec.error);
   li.append(mid);
   if (rec.ok) {
-    const b = el('button', 'rect', '下載' + rec.out);
+    const b = el('button', 'dl', '下載' + rec.out);
     b.onclick = () => A.saveFile(rec.out, outputs.get(rec.out));
     li.append(b);
   } else if (rec.trace) {
@@ -181,35 +190,49 @@ $('rpRun').onclick = async () => {
   const tk = getToken();            // first, so the popup is allowed
   setBusy(true); msg(''); outputs.clear(); zipBytes = null;
   $('rpZip').hidden = true; $('rpList').replaceChildren();
-  const stage = t => { msg(t); };
+
+  // Cancel: stops waiting right away; a report already being built finishes first
+  let stopped = false;
+  const CANCEL = new Error('cancelled');
+  const stopP = new Promise((_, rej) => { cancelRun = () => { stopped = true; rej(CANCEL); }; });
+  stopP.catch(() => {});
+  const g = p => Promise.race([p, stopP]);
+  const stage = t => { if (!stopped) msg(t); };
+  let ok = 0, bad = 0, py = null, ns = null;
   try {
-    await tk;
+    await g(tk);
     stage('正在讀取試算表…');
-    const values = await readSheet();
+    const values = await g(readSheet());
     $('rpLogin').hidden = true; $('rpLogout').hidden = false;
     stage('正在讀取報告書範本…');
-    const tpl = await readTemplate();
-    const { py, ns } = await ensureEngine(stage);
+    const tpl = await g(readTemplate());
+    ({ py, ns } = await g(ensureEngine(stage)));
     ns.get('load_sheet')(JSON.stringify(values));
     py.FS.writeFile('/work/report/template.docx', tpl);
     ns.get('reset_reports')();
     const makeOne = ns.get('make_one');
-    let ok = 0, bad = 0;
-    for (let i = 0; i < want.length; i++) {
+    for (let i = 0; i < want.length && !stopped; i++) {
       $('rpRun').textContent = '產生中' + (i + 1) + ' / ' + want.length;
       stage('正在產生' + want[i] + '的報告書…');
       await A.sleep(20);
+      if (stopped) break;
       const rec = JSON.parse(makeOne(want[i]));
       if (rec.ok) { ok++; outputs.set(rec.out, py.FS.readFile(rec.out_path)); } else bad++;
       $('rpList').append(row(rec));
     }
     makeOne.destroy();
-    const z = ns.get('zip_reports')();
-    if (z) { zipBytes = py.FS.readFile(z); $('rpZip').hidden = false; }
+    if (stopped) throw CANCEL;
     msg(ok ? ok + '份報告書已產生！' + (bad ? bad + '份失敗，請看下方的原因' : '') : '沒有產生任何報告書，請看下方的原因', !ok);
   } catch (e) {
-    console.error(e); msg(e.message || String(e), true);
-  } finally { setBusy(false); }
+    if (e === CANCEL) msg('已取消' + (ok ? '，已完成的' + ok + '份報告書仍可下載' : ''));
+    else { console.error(e); msg(e.message || String(e), true); }
+  } finally {
+    if (ns && ok) {
+      const z = ns.get('zip_reports')();
+      if (z) { zipBytes = py.FS.readFile(z); $('rpZip').hidden = false; }
+    }
+    setBusy(false);
+  }
 };
 
 $('rpZip').onclick = () => zipBytes && A.saveFile('reports.zip', zipBytes);
