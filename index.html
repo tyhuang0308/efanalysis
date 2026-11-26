@@ -9,7 +9,7 @@
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=20261126g">
+<link rel="stylesheet" href="style.css?v=20261126m">
 </head>
 <body>
 <div class="shell">
@@ -104,32 +104,26 @@
 
   <div class="report" id="report" aria-label="製作報告書">
     <section class="card acct">
-      <div class="r1">
-        <div class="ch"><h2>製作報告書</h2><span class="avatar" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M7 3h7l4 4v14H7z"/><path d="M14 3v4h4M10 12h5M10 15.5h5"/></svg></span></div>
-        <p class="note">用Google帳號登入後輸入欲製作報告書的個案ID，即可產生word檔</p>
-      </div>
-      <div class="actions r2">
+      <div class="ch"><h2>製作報告書</h2><span class="avatar" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M7 3h7l4 4v14H7z"/><path d="M14 3v4h4M10 12h5M10 15.5h5"/></svg></span></div>
+      <p class="note">用Google帳號登入後輸入欲製作報告書的個案ID，即可產生word檔</p>
+      <div class="actions">
         <button class="btn" id="rpLogin">以Google帳號登入</button>
         <button class="btn soft" id="rpLogout" hidden>登出</button>
       </div>
-      <div class="r3"><p class="msg" id="rpAuth" aria-live="polite"></p></div>
+      <p class="msg" id="rpAuth" aria-live="polite"></p>
+      <label class="lab" for="rpIds">個案ID</label>
+      <textarea id="rpIds" rows="3" placeholder="例如：NMY001 NMY002（可以輸入多個，用空白或換行分開）" autocomplete="off" spellcheck="false"></textarea>
+      <p class="hint" id="rpCheck" aria-live="polite"></p>
+      <div class="actions">
+        <button class="btn" id="rpRun">完成，開始製作報告書</button>
+        <button class="btn soft" id="rpCancel" hidden>取消</button>
+      </div>
     </section>
 
-    <section class="card form">
-      <div class="r1">
-        <label class="lab" for="rpIds">個案ID</label>
-        <textarea id="rpIds" rows="3" placeholder="例如：NMY001 NMY002（可以輸入多個，用空白或換行分開）" autocomplete="off" spellcheck="false"></textarea>
-        <p class="hint" id="rpCheck" aria-live="polite"></p>
-      </div>
-      <div class="actions r2">
-        <button class="btn" id="rpRun">產生報告書</button>
-        <button class="btn soft" id="rpCancel" hidden>取消</button>
-        <button class="btn soft" id="rpZip" hidden>下載全部報告書（zip）</button>
-      </div>
-      <div class="r3">
-        <p class="msg" id="rpMsg" aria-live="polite"></p>
-        <div class="outbox"><ul class="rlist" id="rpList"></ul><p class="empty-out">產生的報告書會列在這裡</p></div>
-      </div>
+    <section class="card out" aria-label="製作結果">
+      <div class="ch"><h2>製作結果</h2><button class="btn soft sm" id="rpZip" hidden>下載全部報告書（zip）</button></div>
+      <p class="msg" id="rpMsg" aria-live="polite"></p>
+      <div class="outbox" id="rpResults" hidden><ul class="rlist" id="rpList"></ul></div>
     </section>
   </div>
 </main>
@@ -140,8 +134,8 @@
 
 <script src="https://cdn.jsdelivr.net/pyodide/v0.29.5/full/pyodide.js"></script>
 <script src="https://accounts.google.com/gsi/client" async></script>
-<script src="config.js?v=20261126g"></script>
-<script src="app.js?v=20261126g"></script>
-<script src="report.js?v=20261126g"></script>
+<script src="config.js?v=20261126m"></script>
+<script src="app.js?v=20261126m"></script>
+<script src="report.js?v=20261126m"></script>
 </body>
 </html>

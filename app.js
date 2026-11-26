@@ -197,7 +197,7 @@ function card(rec, path){
   const li = el('li', rec.ok ? '' : 'fail');
   li.append(el('span', 'nm', rec.file), el('span', 'st', rec.ok ? '完成' : rec.error));
   if (rec.ok) {
-    const btn = el('button', 'dl', '下載' + rec.out);
+    const btn = el('button', 'dl', '下載'); btn.setAttribute('aria-label', '下載' + rec.out);
     btn.onclick = () => saveFile(rec.out, outputs.get(rec.out));
     li.append(btn);
   } else {

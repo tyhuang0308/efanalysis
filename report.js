@@ -138,7 +138,7 @@ function setBusy(on){
   busy = on;
   $('rpRun').disabled = on; $('rpLogin').disabled = on;
   $('rpCancel').hidden = !on; $('rpCancel').disabled = false; $('rpCancel').textContent = '取消';
-  if (!on) { $('rpRun').textContent = '產生報告書'; cancelRun = null; }
+  if (!on) { $('rpRun').textContent = '完成，開始製作報告書'; cancelRun = null; }
 }
 
 $('rpCancel').onclick = () => {
@@ -173,7 +173,7 @@ function row(rec){
   const mid = el('span', 'st', rec.ok ? '完成' : rec.error);
   li.append(mid);
   if (rec.ok) {
-    const b = el('button', 'dl', '下載' + rec.out);
+    const b = el('button', 'dl', '下載'); b.setAttribute('aria-label', '下載' + rec.out);
     b.onclick = () => A.saveFile(rec.out, outputs.get(rec.out));
     li.append(b);
   } else if (rec.trace) {
@@ -189,7 +189,7 @@ $('rpRun').onclick = async () => {
   if (!want.length) { msg('請先輸入個案ID', true); $('rpIds').focus(); return; }
   const tk = getToken();            // first, so the popup is allowed
   setBusy(true); msg(''); outputs.clear(); zipBytes = null;
-  $('rpZip').hidden = true; $('rpList').replaceChildren();
+  $('rpZip').hidden = true; $('rpList').replaceChildren(); $('rpResults').hidden = true;
 
   // Cancel: stops waiting right away; a report already being built finishes first
   let stopped = false;
@@ -212,13 +212,13 @@ $('rpRun').onclick = async () => {
     ns.get('reset_reports')();
     const makeOne = ns.get('make_one');
     for (let i = 0; i < want.length && !stopped; i++) {
-      $('rpRun').textContent = '產生中' + (i + 1) + ' / ' + want.length;
+      $('rpRun').textContent = '製作中' + (i + 1) + ' / ' + want.length;
       stage('正在產生' + want[i] + '的報告書…');
       await A.sleep(20);
       if (stopped) break;
       const rec = JSON.parse(makeOne(want[i]));
       if (rec.ok) { ok++; outputs.set(rec.out, py.FS.readFile(rec.out_path)); } else bad++;
-      $('rpList').append(row(rec));
+      $('rpList').append(row(rec)); $('rpResults').hidden = false;
     }
     makeOne.destroy();
     if (stopped) throw CANCEL;
