@@ -25,6 +25,27 @@ from mailmerge import MailMerge
 from docx import Document
 from docx.shared import Inches
 
+# docx-mailmerge 預設用 ASCII 輸出 Word 的 XML。瀏覽器版 lxml 附帶的 libxml2 比較舊，
+# 中文內容很長時會出現「SerialisationError: IO_ENCODER」。
+# 改用 UTF-8 輸出（Word 本身用的就是 UTF-8），報告書內容完全相同。
+import mailmerge as _mailmerge
+from lxml import etree as _etree
+
+
+class _Utf8Etree:
+    def __getattr__(self, name):
+        return getattr(_etree, name)
+
+    @staticmethod
+    def tostring(element, **kw):
+        kw.setdefault('encoding', 'UTF-8')
+        kw.setdefault('xml_declaration', True)
+        kw.setdefault('standalone', True)
+        return _etree.tostring(element, **kw)
+
+
+_mailmerge.etree = _Utf8Etree()
+
 REPORT_ROOT = '/work/report'
 TEMPLATE = REPORT_ROOT + '/template.docx'
 REPORT_DIR = REPORT_ROOT + '/out'

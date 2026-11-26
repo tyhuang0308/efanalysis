@@ -123,6 +123,8 @@ textarea:focus-visible{outline:2px solid #3d63c9;outline-offset:2px}
 .rlist .nm{font-weight:500;overflow-wrap:anywhere}
 .rlist .st{font-size:13px;color:var(--ok)}
 .rlist li.fail .st{color:var(--err);overflow-wrap:anywhere}
+.rlist details.why{grid-column:1/-1;font-size:13px;color:var(--mute)}
+.rlist details.why summary{cursor:pointer}
 @media(max-width:600px){.rlist li{grid-template-columns:minmax(0,1fr) auto}.rlist .st{grid-column:1/-1;grid-row:2}}
 
 @media(max-width:860px){

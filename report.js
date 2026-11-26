@@ -57,7 +57,11 @@ async function gfetch(url, kind, what){
   if (!r.ok) {
     let reason = '';
     try { const j = await r.json(); reason = (j.error && j.error.message) || ''; } catch (e) { /* not JSON */ }
-    const err = new Error(r.status === 403 || r.status === 404
+    const apiOff = /has not been used|is disabled|SERVICE_DISABLED/i.test(reason);
+    const api = url.includes('sheets.googleapis.com') ? 'Google Sheets API' : 'Google Drive API';
+    const err = new Error(apiOff
+      ? what + '：Google Cloud專案還沒啟用' + api + '，請到Google Cloud啟用後等幾分鐘再試（' + reason + '）'
+      : r.status === 403 || r.status === 404
       ? what + '：請確認這個檔案已分享給你登入的Google帳號' + (reason ? '（' + reason + '）' : '')
       : what + '（HTTP ' + r.status + '）' + (reason ? '：' + reason : ''));
     err.status = r.status; err.reason = reason; throw err;
@@ -163,6 +167,9 @@ function row(rec){
     const b = el('button', 'rect', '下載' + rec.out);
     b.onclick = () => A.saveFile(rec.out, outputs.get(rec.out));
     li.append(b);
+  } else if (rec.trace) {
+    const d = el('details', 'why'); d.append(el('summary', '', '詳細錯誤訊息'), el('pre', '', rec.trace));
+    li.append(d);
   } else li.append(el('span'));
   return li;
 }
