@@ -3,7 +3,7 @@
 // 只有試算表和範本有分享給他的人，登入後才讀得到內容
 window.EF_CONFIG = {
   // Google Cloud「用戶端」頁面的用戶端ID（結尾是 .apps.googleusercontent.com）
-  googleClientId: '',
+  googleClientId: '476004057838-u628ghff26slil42j0vvdlspcbn35cha.apps.googleusercontent.com',
 
   // 共享試算表「narrative&EF&ER資料key in」：網址 /d/ 和 /edit 中間那一段
   sheetId: '1y75at9jREamKqjykwqohKsmnqSxB5xkLhu8cCaZ59Lo',
