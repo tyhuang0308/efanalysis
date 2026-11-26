@@ -114,7 +114,7 @@ details.skip ul{margin:6px 0 0;padding-left:18px;max-height:180px;overflow:auto;
 pre{overflow-x:auto;font-size:11px;background:#fff;padding:10px;border-radius:8px;margin:6px 0 0}
 
 /* report */
-.report{display:flex;flex-direction:column;gap:18px}
+.report{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2fr);gap:18px;align-items:stretch}
 .avatar{width:36px;height:36px;border-radius:50%;background:var(--rose2);color:var(--rose);display:grid;place-items:center}
 .avatar svg{width:20px;height:20px}
 .acct .msg{margin-top:8px}
@@ -140,6 +140,7 @@ textarea:focus-visible{outline:2px solid var(--blue);outline-offset:1px;backgrou
   #outputs{order:3;padding:4px 16px 32px}
   .tests{grid-template-columns:repeat(2,minmax(0,1fr))}
   .top{grid-template-columns:minmax(0,1fr)}
+  .report{grid-template-columns:minmax(0,1fr)}
   .top .art{order:-1;max-width:300px;margin:0 auto}
 }
 @media(max-width:520px){
