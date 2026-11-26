@@ -110,6 +110,21 @@ pre{overflow-x:auto;font-size:12px;background:var(--bg);padding:10px;border-radi
 .drop[data-state=done] b{color:var(--ok)}
 @media(prefers-reduced-motion:reduce){.queue li.new{animation:none;background:#e3efe3}}
 
+#report .main{display:flex;flex-direction:column;gap:10px}
+#report .main .lab{margin-bottom:-2px}
+textarea{font:inherit;font-size:16px;width:100%;min-height:92px;resize:vertical;padding:10px 12px;border:1px solid var(--frame);border-radius:6px;background:#fff;color:var(--ink)}
+textarea:focus-visible{outline:2px solid #3d63c9;outline-offset:2px}
+.hint{margin:0;font-size:13.5px;color:var(--mute);min-height:1.3em}.hint.err{color:var(--err)}
+#report .actions{display:flex;flex-wrap:wrap;gap:8px}
+#report .msg{margin:0}
+.rlist{list-style:none;margin:6px 0 0;padding:0;border-top:1px solid var(--line)}
+.rlist:empty{display:none}
+.rlist li{display:grid;grid-template-columns:120px minmax(0,1fr) auto;gap:14px;align-items:center;padding:10px 0;border-bottom:1px solid var(--line)}
+.rlist .nm{font-weight:500;overflow-wrap:anywhere}
+.rlist .st{font-size:13px;color:var(--ok)}
+.rlist li.fail .st{color:var(--err);overflow-wrap:anywhere}
+@media(max-width:600px){.rlist li{grid-template-columns:minmax(0,1fr) auto}.rlist .st{grid-column:1/-1;grid-row:2}}
+
 @media(max-width:860px){
   .mark{display:none}
   .drop{min-height:280px}

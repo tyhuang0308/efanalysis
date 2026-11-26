@@ -77,10 +77,36 @@
   <div class="main"><div class="cards" id="cards"></div></div>
 </section>
 
+<section class="split" id="report" aria-label="產生報告書">
+  <div class="side">
+    <h2>產生報告書</h2>
+    <p>用Google帳號登入後輸入個案ID，網頁會讀取共享試算表的report工作表和報告書範本，產生Word檔</p>
+    <div class="actions">
+      <button class="rect" id="rpLogin">以Google帳號登入</button>
+      <button class="rect line" id="rpLogout" hidden>登出</button>
+    </div>
+    <p class="msg" id="rpAuth" aria-live="polite"></p>
+  </div>
+  <div class="main">
+    <label class="lab" for="rpIds">個案ID</label>
+    <textarea id="rpIds" rows="3" placeholder="例如：NMY001 NMY002（可以輸入多個，用空白或換行分開）" autocomplete="off" spellcheck="false"></textarea>
+    <p class="hint" id="rpCheck" aria-live="polite"></p>
+    <div class="actions">
+      <button class="rect" id="rpRun">產生報告書</button>
+      <button class="rect line" id="rpZip" hidden>下載全部報告書（zip）</button>
+    </div>
+    <p class="msg" id="rpMsg" aria-live="polite"></p>
+    <ul class="rlist" id="rpList"></ul>
+  </div>
+</section>
+
 </div></div>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <script src="https://cdn.jsdelivr.net/pyodide/v0.29.5/full/pyodide.js"></script>
+<script src="https://accounts.google.com/gsi/client" async></script>
+<script src="config.js"></script>
 <script src="app.js"></script>
+<script src="report.js"></script>
 </body>
 </html>

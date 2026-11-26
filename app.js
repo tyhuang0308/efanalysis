@@ -8,6 +8,7 @@ const $ = id => document.getElementById(id);
 const el = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; };
 
 let py = null, ready = false, busy = false;
+let resolveReady; const pyReady = new Promise(r => { resolveReady = r; });  // shared with report.js
 const kept = new Map();      // path -> File
 const skipped = new Map();   // path -> reason
 const outputs = new Map();   // xlsx name -> Uint8Array
@@ -147,7 +148,7 @@ async function boot(){
     py.runPython("import zipfile, site, importlib\nsp = site.getsitepackages()[0]\nfor w in WHEEL_FILES:\n    zipfile.ZipFile(w).extractall(sp)\nimportlib.invalidate_caches()\nimport openpyxl");
     setEngine('load', '正在載入計分程式…');
     for (const f of PY_FILES) py.runPython(await fetchOk(f, 'text'), { filename: f });
-    ready = true; setEngine('ok', '分析引擎已就緒');
+    ready = true; setEngine('ok', '分析引擎已就緒'); resolveReady(py);
   } catch (err) {
     console.error(err);
     setEngine('err', '分析引擎載入失敗');
@@ -207,7 +208,9 @@ function card(rec, path){
 $('zipBtn').onclick = () => zipBytes && saveFile('outputs.zip', zipBytes);
 
 async function saveFile(name, bytes){
-  const type = name.endsWith('.zip') ? 'application/zip' : 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+  const type = name.endsWith('.zip') ? 'application/zip'
+    : name.endsWith('.docx') ? 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+    : 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
   const blob = new Blob([bytes], { type });
   const host = (window.claude && typeof window.claude.use === 'function') ? await window.claude.use('downloads') : undefined;
   if (host === undefined) {  // opened as a normal web page
@@ -224,6 +227,9 @@ async function saveFile(name, bytes){
     else toast('下載失敗：' + (e && e.message || code), true);
   }
 }
+
+// Shared with report.js
+window.EFApp = { pyReady, saveFile, toast, el, sleep: ms => new Promise(r => setTimeout(r, ms)) };
 
 refresh();
 boot();
