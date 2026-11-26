@@ -115,7 +115,7 @@ details.skip ul{margin:6px 0 0;padding-left:18px;max-height:180px;overflow:auto;
 pre{overflow-x:auto;font-size:11px;background:#fff;padding:10px;border-radius:8px;margin:6px 0 0}
 
 /* report: form card | results card; the results list fills the card and scrolls, so the card never outgrows the form */
-.report{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2fr);gap:18px;align-items:stretch}
+.report{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:18px;align-items:stretch}
 .report > .card{padding:18px 20px}
 .acct{display:flex;flex-direction:column;gap:8px}
 .acct .ch,.out .ch{margin-bottom:0}
