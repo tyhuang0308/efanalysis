@@ -118,7 +118,7 @@ pre{overflow-x:auto;font-size:11px;background:#fff;padding:10px;border-radius:8p
 .report{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:18px;align-items:stretch}
 .report > .card{padding:18px 20px}
 .acct{display:flex;flex-direction:column;gap:8px}
-.acct .ch,.out .ch{margin-bottom:0}
+.acct .ch,.out .ch{margin-bottom:0;min-height:36px;flex-wrap:nowrap}
 .acct .note{margin-bottom:4px}
 .acct .lab{margin-top:6px}
 .out{display:flex;flex-direction:column;gap:8px;min-height:0}
