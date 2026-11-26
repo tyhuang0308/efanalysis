@@ -45,7 +45,6 @@ async function walk(en){
 function refresh(){
   const q = $('queue'); q.replaceChildren();
   const items = [...kept.keys()].sort((a, b) => baseName(a).localeCompare(baseName(b)));
-  if (!items.length) q.append(el('li', 'empty', '還沒有檔案。把資料夾拖到上方的框裡，或按「選擇資料夾」'));
   for (const p of items) {
     const li = el('li', fresh.has(p) ? 'new' : ''); const name = baseName(p);
     const code = name.slice(-5, -4).toUpperCase();
